@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grace Portfolio</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================
+           GLASSMORPHISM
+        ============================================ */
+        .glass {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(74, 222, 128, 0.2);
+            box-shadow: 0 12px 40px rgba(34, 197, 94, 0.06);
+        }
+
+        /* ============================================
+           ANIMATIONS
+        ============================================ */
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .animate-pulse-dot {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+
+        .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
+        @keyframes spin-slow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================
+           NAVBAR
+        ============================================ */
+        .navbar-scrolled {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ============================================
+           MOBILE MENU
+        ============================================ */
+        .mobile-menu {
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.open {
+            max-height: 500px;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu.closed {
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* ============================================
+           SCROLLBAR
+        ============================================ */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #22c55e;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #16a34a;
+        }
+
+        /* ============================================
+           UTILITIES
+        ============================================ */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .skill-badge {
+            transition: all 0.3s ease;
+        }
+        .skill-badge:hover {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: #4ade80;
+            transform: translateY(-2px);
+        }
+
+        .hover-scale {
+            transition: all 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            transition: all 0.3s ease;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .back-to-top.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+        }
+
+        /* Loading screen */
+        #loader {
+            transition: opacity 0.5s ease;
+        }
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body class="font-['Inter'] bg-slate-50 text-slate-800 antialiased">
+
+    <!-- ==========================================
+    LOADING SCREEN
+    ========================================== -->
+    <div id="loader" class="fixed inset-0 z-[999] bg-slate-900 flex items-center justify-center">
+        <div class="text-center">
+            <div class="relative w-20 h-20 mx-auto mb-4">
+                <div class="absolute inset-0 border-4 border-green-500/20 border-t-green-500 rounded-full animate-spin"></div>
+                <div class="absolute inset-2 border-4 border-green-500/10 border-b-green-500 rounded-full animate-spin-slow"></div>
+                <i class="fas fa-code text-2xl text-green-400 absolute inset-0 flex items-center justify-center"></i>
+            </div>
+            <p class="text-green-400 font-medium">Loading...</p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    NAVBAR
+    ========================================== -->
+    <nav id="mainNav" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 py-4 bg-slate-900/70 backdrop-blur-lg border-b border-white/5">
+        <div class="container mx-auto px-4 sm:px-6 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#home" class="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                <i class="fas fa-code text-green-400 text-xl"></i>
+                Grace
+            </a>
+
+            <!-- Desktop Menu -->
+            <ul class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-300">
+                <li><a href="#home" class="px-4 py-2 rounded-lg hover:bg-white/5 hover:text-white transition-all">Home</a></li>
+                <li><a href="#about" class="px-4 py-2 rounded-lg hover:bg-white/5 hover:text-white transition-all">About</a></li>
+                <li><a href="#projects" class="px-4 py-2 rounded-lg hover:bg-white/5 hover:text-white transition-all">Projects</a></li>
+                <li><a href="#skills" class="px-4 py-2 rounded-lg hover:bg-white/5 hover:text-white transition-all">Skills</a></li>
+                <li><a href="#contact" class="px-4 py-2 rounded-lg hover:bg-white/5 hover:text-white transition-all">Contact</a></li>
+            </ul>
+
+            <!-- Right Side -->
+            <div class="flex items-center gap-3">
+                <!-- Hire Me Button -->
+                <a href="#contact" class="hidden sm:inline-block px-5 py-2 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-full text-sm transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/30">
+                    Hire Me
+                </a>
+
+                <!-- Mobile Menu Toggle -->
+                <button id="menuToggle" class="md:hidden p-2 rounded-lg hover:bg-white/5 text-slate-300 hover:text-white transition-all">
+                    <i id="menuIcon" class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden overflow-hidden transition-all duration-300 max-h-0 opacity-0 invisible">
+            <div class="container mx-auto px-4 py-4 border-t border-white/5 bg-slate-900/90 backdrop-blur-lg">
+                <ul class="flex flex-col gap-2 text-sm font-medium text-slate-300">
+                    <li><a href="#home" class="block px-4 py-3 rounded-lg hover:bg-white/5 hover:text-white transition-all">Home</a></li>
+                    <li><a href="#about" class="block px-4 py-3 rounded-lg hover:bg-white/5 hover:text-white transition-all">About</a></li>
+                    <li><a href="#projects" class="block px-4 py-3 rounded-lg hover:bg-white/5 hover:text-white transition-all">Projects</a></li>
+                    <li><a href="#skills" class="block px-4 py-3 rounded-lg hover:bg-white/5 hover:text-white transition-all">Skills</a></li>
+                    <li><a href="#contact" class="block px-4 py-3 rounded-lg hover:bg-white/5 hover:text-white transition-all">Contact</a></li>
+                    <li><a href="#contact" class="block px-4 py-3 mt-2 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg text-center transition-all">Hire Me</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==========================================
+    HERO SECTION
+    ========================================== -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative bg-slate-900 overflow-hidden pt-20">
+        <!-- Background Blobs -->
+        <div class="absolute w-[500px] h-[500px] bg-green-500/5 rounded-full blur-3xl -top-32 -right-32 pointer-events-none"></div>
+        <div class="absolute w-[400px] h-[400px] bg-green-500/5 rounded-full blur-3xl -bottom-32 -left-32 pointer-events-none"></div>
+
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark text-green-400 text-sm font-medium mb-6">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse-dot"></span>
+                Available for freelance work
+            </div>
+
+            <!-- Avatar -->
+            <div class="animate-float">
+                <img src="images/grace.jpg" alt="Grace"
+                    class="w-32 h-32 rounded-full object-cover mx-auto border-2 border-green-500/30 shadow-xl shadow-green-500/10 mb-6 hover:scale-105 transition-transform duration-300" />
+            </div>
+
+            <!-- Heading -->
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4">
+                Hi, I'm <span class="text-green-400">Grace</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-lg text-slate-300 max-w-lg mx-auto mb-8 leading-relaxed">
+                Web Developer crafting beautiful, functional websites with modern technologies.
+            </p>
+
+            <!-- Buttons -->
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="#projects" class="px-8 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/30 flex items-center gap-2">
+                    <i class="fas fa-rocket"></i>
+                    View My Work
+                </a>
+                <a href="#contact" class="px-8 py-3 glass-dark text-white font-semibold rounded-xl transition-all hover:bg-white/5 flex items-center gap-2">
+                    <i class="fas fa-paper-plane"></i>
+                    Let's Talk
+                </a>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+                <a href="#about" class="text-slate-400 hover:text-green-400 transition-colors">
+                    <i class="fas fa-chevron-down text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+    ABOUT SECTION
+    ========================================== -->
+    <section id="about" class="py-24 bg-slate-50">
+        <div class="container mx-auto px-6">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full mb-3">ABOUT</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-3">
+                    About <span class="text-green-600">Me</span>
+                </h2>
+                <p class="text-slate-500 max-w-md mx-auto">
+                    Passionate developer dedicated to creating meaningful digital solutions
+                </p>
+            </div>
+
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                <!-- Image -->
+                <div class="rounded-2xl overflow-hidden shadow-xl border border-slate-200/50 group">
+                    <img src="images/images1.jpg" alt="About Grace" class="w-full h-[400px] object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+
+                <!-- Content -->
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">Building Websites, One Line at a Time</h3>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        I'm a Web Developer with a passion for creating beautiful, user-friendly websites. I specialize in front-end development with a focus on clean design and responsive layouts.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        When I'm not coding, you'll find me learning new technologies, working on personal projects, or exploring creative design ideas.
+                    </p>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="text-center p-3 rounded-xl bg-white border border-slate-200/50 hover:border-green-200 transition-all">
+                            <div class="text-2xl font-extrabold text-green-600">5+</div>
+                            <div class="text-xs text-slate-500 font-medium">Projects</div>
+                        </div>
+                        <div class="text-center p-3 rounded-xl bg-white border border-slate-200/50 hover:border-green-200 transition-all">
+                            <div class="text-2xl font-extrabold text-green-600">2+</div>
+                            <div class="text-xs text-slate-500 font-medium">Years</div>
+                        </div>
+                        <div class="text-center p-3 rounded-xl bg-white border border-slate-200/50 hover:border-green-200 transition-all">
+                            <div class="text-2xl font-extrabold text-green-600">5+</div>
+                            <div class="text-xs text-slate-500 font-medium">Clients</div>
+                        </div>
+                        <div class="text-center p-3 rounded-xl bg-white border border-slate-200/50 hover:border-green-200 transition-all">
+                            <div class="text-2xl font-extrabold text-green-600">∞</div>
+                            <div class="text-xs text-slate-500 font-medium">Coffee</div>
+                        </div>
+                    </div>
+
+                    <a href="#contact" class="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/30">
+                        <i class="fas fa-envelope"></i>
+                        Get In Touch
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+    PROJECTS SECTION
+    ========================================== -->
+    <section id="projects" class="py-24 bg-slate-100">
+        <div class="container mx-auto px-6">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full mb-3">PORTFOLIO</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-3">
+                    My <span class="text-green-600">Projects</span>
+                </h2>
+                <p class="text-slate-500 max-w-md mx-auto">
+                    Some of the things I've built recently
+                </p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+                <!-- Project 1 - Landing Page -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop" alt="Project 1" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-slate-800 mb-2">Landing Page Design</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-3">A modern, responsive landing page built with HTML, CSS, and Tailwind.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">HTML</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">CSS</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">Tailwind</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-colors group">
+                            View Project
+                            <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 2 - Portfolio Website -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop" alt="Project 2" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-slate-800 mb-2">Portfolio Website</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-3">A personal portfolio website built with HTML, CSS, JavaScript, and Bootstrap.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">HTML</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">CSS</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">Bootstrap</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-colors group">
+                            View Project
+                            <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 3 - E-commerce -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="Project 3" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-slate-800 mb-2">E-commerce Site</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-3">A fully functional e-commerce website with PHP, MySQL, and Bootstrap.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">PHP</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">MySQL</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">Bootstrap</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-colors group">
+                            View Project
+                            <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 4 - To-Do App -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&h=400&fit=crop" alt="Project 4" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-slate-800 mb-2">To-Do App</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-3">A simple to-do application with JavaScript, CSS, and HTML.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">HTML</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">CSS</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">JavaScript</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-colors group">
+                            View Project
+                            <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 5 - Blog Site -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&h=400&fit=crop" alt="Project 5" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-slate-800 mb-2">Blog Website</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-3">A dynamic blog site with PHP, MySQL, and Tailwind CSS.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">PHP</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">MySQL</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">Tailwind</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-colors group">
+                            View Project
+                            <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 6 - Weather App -->
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=600&h=400&fit=crop" alt="Project 6" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-slate-800 mb-2">Weather App</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-3">A weather application using JavaScript, HTML, and CSS with API integration.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">HTML</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">CSS</span>
+                            <span class="px-3 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-full border border-green-200">JavaScript</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-colors group">
+                            View Project
+                            <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+    SKILLS SECTION - Only Your Skills
+    ========================================== -->
+    <section id="skills" class="py-24 bg-slate-50">
+        <div class="container mx-auto px-6">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full mb-3">EXPERTISE</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-3">
+                    My <span class="text-green-600">Skills</span>
+                </h2>
+                <p class="text-slate-500 max-w-md mx-auto">
+                    Technologies and tools I work with
+                </p>
+            </div>
+
+            <!-- Skills Grid -->
+            <div class="max-w-4xl mx-auto">
+                <!-- Frontend Skills -->
+                <div class="glass-card rounded-2xl p-8 mb-6">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-code text-green-600"></i>
+                        Frontend Development
+                    </h4>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge px-5 py-2.5 bg-white/50 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-green-400">
+                            <i class="fab fa-html5 text-green-600 mr-2"></i> HTML
+                        </span>
+                        <span class="skill-badge px-5 py-2.5 bg-white/50 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-green-400">
+                            <i class="fab fa-css3-alt text-green-600 mr-2"></i> CSS
+                        </span>
+                        <span class="skill-badge px-5 py-2.5 bg-white/50 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-green-400">
+                            <i class="fab fa-js text-green-600 mr-2"></i> JavaScript
+                        </span>
+                        <span class="skill-badge px-5 py-2.5 bg-white/50 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-green-400">
+                            <i class="fab fa-bootstrap text-green-600 mr-2"></i> Bootstrap
+                        </span>
+                        <span class="skill-badge px-5 py-2.5 bg-white/50 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-green-400">
+                            <i class="fab fa-tailwind text-green-600 mr-2"></i> Tailwind CSS
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Backend Skills -->
+                <div class="glass-card rounded-2xl p-8">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-server text-green-600"></i>
+                        Backend & Database
+                    </h4>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge px-5 py-2.5 bg-white/50 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-green-400">
+                            <i class="fab fa-php text-green-600 mr-2"></i> PHP
+                        </span>
+                        <span class="skill-badge px-5 py-2.5 bg-white/50 border border-slate-200 rounded-full text-sm font-medium text-slate-700 hover:border-green-400">
+                            <i class="fas fa-database text-green-600 mr-2"></i> MySQL
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+    CONTACT SECTION
+    ========================================== -->
+    <section id="contact" class="py-24 bg-slate-900">
+        <div class="container mx-auto px-6">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-1.5 bg-green-100/10 text-green-400 text-xs font-semibold rounded-full mb-3 border border-green-500/20">CONTACT</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-3">
+                    Let's Work <span class="text-green-400">Together</span>
+                </h2>
+                <p class="text-slate-400 max-w-md mx-auto">
+                    Have a project in mind? Let's create something amazing
+                </p>
+            </div>
+
+            <!-- Form -->
+            <div class="max-w-lg mx-auto">
+                <form id="contactForm" class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
+                        <input type="text" id="name" placeholder="Your name..." required
+                            class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all" />
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
+                        <input type="email" id="email" placeholder="you@example.com" required
+                            class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all" />
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-slate-300 mb-2">Message</label>
+                        <textarea id="message" rows="5" placeholder="Tell me about your project..." required
+                            class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all resize-none"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/30 flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Message
+                    </button>
+                </form>
+                <div id="formMessage" class="mt-4 text-center hidden"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+    FOOTER
+    ========================================== -->
+    <footer class="py-8 bg-slate-950 border-t border-white/5">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center gap-3 mb-4">
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-green-500/20 text-slate-400 hover:text-green-400 flex items-center justify-center transition-all hover:scale-110">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-green-500/20 text-slate-400 hover:text-green-400 flex items-center justify-center transition-all hover:scale-110">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-green-500/20 text-slate-400 hover:text-green-400 flex items-center justify-center transition-all hover:scale-110">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-green-500/20 text-slate-400 hover:text-green-400 flex items-center justify-center transition-all hover:scale-110">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            <p class="text-sm text-slate-500">&copy; 2026 Grace. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+    BACK TO TOP BUTTON
+    ========================================== -->
+    <button id="backToTop" class="back-to-top hidden fixed bottom-6 right-6 z-50 p-3 rounded-full bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/30 transition-all hover:scale-110">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ==========================================
+    JAVASCRIPT
+    ========================================== -->
+    <script>
+        // ============================================
+        // LOADING SCREEN
+        // ============================================
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            setTimeout(function() {
+                loader.classList.add('hidden');
+            }, 500);
+        });
+
+        // ============================================
+        // NAVBAR SCROLL EFFECT
+        // ============================================
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('navbar-scrolled');
+            } else {
+                nav.classList.remove('navbar-scrolled');
+            }
+        });
+
+        // ============================================
+        // MOBILE MENU TOGGLE
+        // ============================================
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+        let isMenuOpen = false;
+
+        menuToggle.addEventListener('click', function() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('max-h-0', 'opacity-0', 'invisible');
+                mobileMenu.classList.add('max-h-[500px]', 'opacity-100', 'visible');
+                menuIcon.className = 'fas fa-times text-xl';
+            } else {
+                mobileMenu.classList.remove('max-h-[500px]', 'opacity-100', 'visible');
+                mobileMenu.classList.add('max-h-0', 'opacity-0', 'invisible');
+                menuIcon.className = 'fas fa-bars text-xl';
+            }
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobileMenu a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                isMenuOpen = false;
+                mobileMenu.classList.remove('max-h-[500px]', 'opacity-100', 'visible');
+                mobileMenu.classList.add('max-h-0', 'opacity-0', 'invisible');
+                menuIcon.className = 'fas fa-bars text-xl';
+            });
+        });
+
+        // ============================================
+        // SMOOTH SCROLL FOR NAV LINKS
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ============================================
+        // BACK TO TOP BUTTON
+        // ============================================
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTop.classList.remove('hidden');
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.add('hidden');
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ============================================
+        // CONTACT FORM HANDLER
+        // ============================================
+        const contactForm = document.getElementById('contactForm');
+        const formMessage = document.getElementById('formMessage');
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (name.length < 2) {
+                showMessage('❌ Please enter your full name.', 'error');
+                return;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                showMessage('❌ Please enter a valid email address.', 'error');
+                return;
+            }
+
+            if (message.length < 10) {
+                showMessage('❌ Please enter a message with at least 10 characters.', 'error');
+                return;
+            }
+
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+
+            setTimeout(function() {
+                showMessage('✅ Thank you for your message! I\'ll get back to you soon.', 'success');
+                contactForm.reset();
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
+        });
+
+        function showMessage(text, type) {
+            formMessage.textContent = text;
+            formMessage.className = 'mt-4 text-center p-4 rounded-xl ' +
+                (type === 'error' ?
+                    'bg-red-500/10 text-red-400 border border-red-500/20' :
+                    'bg-green-500/10 text-green-400 border border-green-500/20'
+                );
+            formMessage.classList.remove('hidden');
+
+            setTimeout(function() {
+                formMessage.classList.add('hidden');
+            }, 5000);
+        }
+
+        console.log('🚀 Grace Portfolio loaded successfully!');
+    </script>
+</body>
+
+</html>
