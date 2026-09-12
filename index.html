@@ -1,270 +1,468 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Grace | Web Developer Portfolio</title>
     <meta name="description"
-        content="Grace — student web developer building responsive, practical, and user-friendly web applications.">
-    <meta name="theme-color" content="#07110c">
+        content="Grace — student web developer building responsive, practical, and user-friendly web applications." />
+    <meta name="author" content="Grace" />
+    <meta name="theme-color" content="#07110c" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        manrope: ['Manrope', 'sans-serif'],
+                        mono: ['DM Mono', 'monospace'],
+                    },
+                    colors: {
+                        ink: '#07110c',
+                        ink2: '#0b1710',
+                        lime: '#22c55e',
+                        paper: '#f6f8f7',
+                        soft: '#eef3f0',
+                    },
+                    boxShadow: {
+                        soft: '0 24px 70px rgba(8,24,14,.10)',
+                        glass: '0 30px 90px rgba(0,0,0,.22)',
+                    }
+                }
+            }
+        }
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 
-<body>
-    <div id="loader" class="loader" aria-hidden="true">
-        <div class="loader-card"><span class="brand-mark">&lt;/&gt;</span><span>Loading portfolio</span></div>
+<body class="font-manrope bg-paper text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-[9999] grid place-items-center bg-ink transition-all duration-500">
+        <div class="text-center">
+            <div class="relative w-20 h-20 mx-auto mb-5">
+                <div class="absolute inset-0 rounded-full border-4 border-green-400/15 border-t-green-400 animate-spin">
+                </div>
+                <div class="absolute inset-2 rounded-full border-4 border-white/10 border-b-white/70 spinner-reverse">
+                </div>
+                <div class="absolute inset-0 grid place-items-center font-mono text-green-300 text-sm">&lt;/&gt;</div>
+            </div>
+            <p class="font-mono text-xs tracking-[0.22em] text-green-200/80 uppercase">Loading portfolio</p>
+        </div>
     </div>
 
-    <nav id="mainNav" class="nav">
-        <div class="container nav-inner">
-            <a href="#home" class="brand"><span class="brand-mark">&lt;/&gt;</span><span>Grace</span></a>
-            <div class="desktop-nav">
+    <!-- Navbar -->
+    <nav id="mainNav"
+        class="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-ink/75 backdrop-blur-xl transition-all duration-300">
+        <div class="mx-auto flex min-h-[74px] w-[min(1140px,calc(100%-40px))] items-center justify-between gap-6">
+            <a href="#home" class="flex items-center gap-2 text-white font-extrabold text-lg">
+                <span class="font-mono text-green-300">&lt;/&gt;</span>
+                <span>Grace</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-1">
                 <a href="#home" class="nav-link active">Home</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#projects" class="nav-link">Projects</a>
                 <a href="#skills" class="nav-link">Skills</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </div>
-            <div class="nav-actions">
-                <a href="#contact" class="btn btn-primary nav-cta">Let's Talk</a>
-                <button id="menuToggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false">
+
+            <div class="flex items-center gap-3">
+                <a href="#contact"
+                    class="hidden sm:inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-2.5 text-sm font-extrabold text-ink transition hover:-translate-y-0.5 hover:bg-green-400">
+                    <i class="fa-regular fa-paper-plane"></i>
+                    Let's Talk
+                </a>
+
+                <button id="menuToggle"
+                    class="md:hidden grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/5 text-white"
+                    aria-label="Open menu" aria-expanded="false">
                     <i id="menuIcon" class="fa-solid fa-bars"></i>
                 </button>
             </div>
         </div>
-        <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
-            <div class="container mobile-menu-inner">
-                <a href="#home">Home</a><a href="#about">About</a><a href="#projects">Projects</a>
-                <a href="#skills">Skills</a><a href="#contact">Contact</a>
+
+        <div id="mobileMenu" class="mobile-menu md:hidden border-t border-white/5 bg-ink/95 backdrop-blur-xl">
+            <div class="mx-auto grid w-[min(1140px,calc(100%-40px))] py-4">
+                <a href="#home" class="mobile-link">Home</a>
+                <a href="#about" class="mobile-link">About</a>
+                <a href="#projects" class="mobile-link">Projects</a>
+                <a href="#skills" class="mobile-link">Skills</a>
+                <a href="#contact" class="mobile-link">Contact</a>
             </div>
         </div>
     </nav>
 
     <main>
-        <section id="home" class="hero section-dark">
-            <div class="hero-grid container">
-                <div class="hero-copy reveal">
-                    <div class="status-pill"><span class="status-dot"></span>Available for internship / OJT
-                        opportunities</div>
-                    <p class="eyebrow">STUDENT WEB DEVELOPER</p>
-                    <h1>Building clean, practical <span class="accent">digital experiences.</span></h1>
-                    <p class="hero-text">I create responsive websites and web applications with a focus on usability,
-                        clean interfaces, and reliable functionality.</p>
-                    <div class="hero-actions">
-                        <a href="#projects" class="btn btn-primary"><i class="fa-solid fa-arrow-down"></i>View
-                            Projects</a>
-                        <a href="#contact" class="btn btn-ghost"><i class="fa-regular fa-paper-plane"></i>Contact Me</a>
+        <!-- Hero -->
+        <section id="home" class="relative min-h-screen overflow-hidden bg-ink pt-32 pb-24 text-white">
+            <div
+                class="pointer-events-none absolute -right-40 -top-56 h-[560px] w-[560px] rounded-full border border-green-300/10">
+            </div>
+            <div
+                class="pointer-events-none absolute -left-28 -bottom-44 h-[360px] w-[360px] rounded-full border border-green-300/10">
+            </div>
+
+            <div
+                class="mx-auto grid min-h-[calc(100vh-8rem)] w-[min(1140px,calc(100%-40px))] items-center gap-16 lg:grid-cols-[1.1fr_.9fr]">
+                <div class="reveal">
+                    <div
+                        class="mb-6 inline-flex items-center gap-3 rounded-full border border-green-300/15 bg-white/[0.04] px-4 py-2 backdrop-blur-xl">
+                        <span class="h-2 w-2 rounded-full bg-green-300 shadow-[0_0_0_6px_rgba(134,239,172,.08)]"></span>
+                        <span class="font-mono text-[11px] tracking-wide text-slate-300">AVAILABLE FOR INTERNSHIP /
+                            OJT</span>
                     </div>
-                    <div class="hero-meta">
-                        <div><strong>4</strong><span>Academic Projects</span></div>
-                        <div><strong>Front-end</strong><span>Responsive UI</span></div>
-                        <div><strong>Back-end</strong><span>PHP & MySQL</span></div>
+
+                    <p class="mb-4 font-mono text-xs font-medium tracking-[0.2em] text-green-300 uppercase">Student Web
+                        Developer</p>
+
+                    <h1
+                        class="max-w-4xl text-5xl font-extrabold leading-[.98] tracking-[-.05em] sm:text-6xl lg:text-7xl">
+                        Building clean, practical
+                        <span class="text-green-300">digital experiences.</span>
+                    </h1>
+
+                    <p class="mt-6 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">
+                        I create responsive websites and web applications with a focus on usability,
+                        clean interfaces, and reliable functionality.
+                    </p>
+
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a href="#projects"
+                            class="inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-extrabold text-ink transition hover:-translate-y-0.5 hover:bg-green-400">
+                            <i class="fa-solid fa-arrow-down"></i>
+                            View Projects
+                        </a>
+                        <a href="#contact"
+                            class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-extrabold text-white backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/10">
+                            <i class="fa-regular fa-paper-plane"></i>
+                            Contact Me
+                        </a>
+                    </div>
+
+                    <div class="mt-10 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-3">
+                        <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
+                            <strong class="block text-sm text-white">4</strong>
+                            <span class="mt-1 block font-mono text-[10px] text-slate-500">ACADEMIC PROJECTS</span>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
+                            <strong class="block text-sm text-white">Front-end</strong>
+                            <span class="mt-1 block font-mono text-[10px] text-slate-500">RESPONSIVE UI</span>
+                        </div>
+                        <div
+                            class="col-span-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl sm:col-span-1">
+                            <strong class="block text-sm text-white">Back-end</strong>
+                            <span class="mt-1 block font-mono text-[10px] text-slate-500">PHP & MYSQL</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="hero-visual reveal">
-                    <div class="profile-shell glass-panel">
-                        <div class="profile-topline"><span class="mini-dot"></span><span>portfolio.profile</span><span
-                                class="code-tag">01</span></div>
-                        <div class="profile-photo-wrap"><img src="images/grace.jpg" alt="Grace" class="profile-photo">
+                <div class="reveal lg:justify-self-end">
+                    <div
+                        class="w-full max-w-md rounded-[28px] border border-white/10 bg-white/[0.06] p-4 shadow-glass backdrop-blur-2xl">
+                        <div class="mb-4 flex items-center gap-2 font-mono text-[10px] tracking-wide text-slate-500">
+                            <span class="h-2 w-2 rounded-full bg-green-300"></span>
+                            portfolio.profile
+                            <span class="ml-auto">01</span>
                         </div>
-                        <div class="profile-info"><span class="profile-kicker">Hello, I'm</span>
-                            <h2>Grace</h2>
-                            <p>Web Developer</p>
+
+                        <div class="aspect-[4/4.2] overflow-hidden rounded-2xl border border-white/10 bg-ink2">
+                            <img src="images/grace.jpg" alt="Grace" class="h-full w-full object-cover">
                         </div>
-                        <div class="profile-stack">
-                            <span>HTML</span><span>CSS</span><span>JavaScript</span><span>PHP</span><span>MySQL</span><span>Tailwind</span>
+
+                        <div class="px-1 pt-5">
+                            <span class="font-mono text-[10px] tracking-[0.14em] text-slate-500 uppercase">Hello,
+                                I'm</span>
+                            <h2 class="mt-1 text-3xl font-extrabold tracking-tight">Grace</h2>
+                            <p class="text-slate-400">Web Developer</p>
+
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="tech-chip">HTML</span>
+                                <span class="tech-chip">CSS</span>
+                                <span class="tech-chip">JavaScript</span>
+                                <span class="tech-chip">PHP</span>
+                                <span class="tech-chip">MySQL</span>
+                                <span class="tech-chip">Tailwind</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="about" class="section section-light">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <p class="eyebrow">ABOUT ME</p>
-                    <h2>Focused on useful design and <span class="accent-dark">better user experiences.</span></h2>
-                    <p>I enjoy turning ideas into responsive websites and practical web systems.</p>
+        <!-- About -->
+        <section id="about" class="bg-paper py-24 sm:py-28">
+            <div class="mx-auto w-[min(1140px,calc(100%-40px))]">
+                <div class="reveal mb-12 max-w-3xl">
+                    <p class="mb-3 font-mono text-xs font-medium tracking-[0.2em] text-green-700 uppercase">About Me</p>
+                    <h2 class="text-4xl font-extrabold tracking-[-.04em] sm:text-5xl">
+                        Focused on useful design and <span class="text-green-700">better user experiences.</span>
+                    </h2>
+                    <p class="mt-4 max-w-2xl text-slate-500">I enjoy turning ideas into responsive websites and
+                        practical web systems.</p>
                 </div>
 
-                <div class="about-grid">
-                    <div class="about-image glass-card reveal"><img src="images/images1.jpg"
-                            alt="Grace working on web development"></div>
-                    <div class="about-content reveal">
-                        <div class="about-copy">
-                            <h3>Student developer with a practical approach.</h3>
-                            <p>I build web interfaces and systems using modern front-end tools together with PHP and
-                                MySQL. I care about clean structure, responsive layouts, accessibility, and interfaces
-                                that are easy to use.</p>
-                            <p>I also enjoy learning through academic projects that solve real workflow problems—from
-                                booking and checkout systems to network design.</p>
+                <div class="grid items-center gap-10 lg:grid-cols-[.8fr_1.2fr]">
+                    <div class="reveal rounded-3xl border border-white/70 bg-white/60 p-2 shadow-soft backdrop-blur-xl">
+                        <img src="images/images1.jpg" alt="Grace working on web development"
+                            class="h-[430px] w-full rounded-[20px] object-cover sm:h-[480px]">
+                    </div>
+
+                    <div class="reveal">
+                        <h3 class="text-3xl font-extrabold tracking-[-.03em]">Student developer with a practical
+                            approach.</h3>
+                        <p class="mt-4 leading-8 text-slate-600">
+                            I build web interfaces and systems using modern front-end tools together with PHP and MySQL.
+                            I care about clean structure, responsive layouts, accessibility, and interfaces that are
+                            easy to use.
+                        </p>
+                        <p class="mt-3 leading-8 text-slate-600">
+                            I also enjoy learning through academic projects that solve real workflow problems—from
+                            booking
+                            and checkout systems to network design.
+                        </p>
+
+                        <div class="mt-7 grid gap-3 sm:grid-cols-3">
+                            <div class="glass-light-card">
+                                <i class="fa-solid fa-laptop-code text-green-700"></i>
+                                <strong>Web Development</strong>
+                                <span>Responsive sites and web apps</span>
+                            </div>
+                            <div class="glass-light-card">
+                                <i class="fa-solid fa-layer-group text-green-700"></i>
+                                <strong>UI Implementation</strong>
+                                <span>Clean, reusable interfaces</span>
+                            </div>
+                            <div class="glass-light-card">
+                                <i class="fa-solid fa-network-wired text-green-700"></i>
+                                <strong>Networking</strong>
+                                <span>Cisco Packet Tracer fundamentals</span>
+                            </div>
                         </div>
-                        <div class="about-points">
-                            <div class="info-card glass-card"><i class="fa-solid fa-laptop-code"></i><strong>Web
-                                    Development</strong><span>Responsive sites and web apps</span></div>
-                            <div class="info-card glass-card"><i class="fa-solid fa-layer-group"></i><strong>UI
-                                    Implementation</strong><span>Clean, reusable interfaces</span></div>
-                            <div class="info-card glass-card"><i
-                                    class="fa-solid fa-network-wired"></i><strong>Networking</strong><span>Cisco Packet
-                                    Tracer fundamentals</span></div>
-                        </div>
-                        <a href="#contact" class="btn btn-dark"><i class="fa-regular fa-envelope"></i>Get In Touch</a>
+
+                        <a href="#contact"
+                            class="mt-7 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 font-extrabold text-white transition hover:-translate-y-0.5">
+                            <i class="fa-regular fa-envelope"></i>
+                            Get In Touch
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="projects" class="section section-soft">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <p class="eyebrow">ACADEMIC PROJECTS</p>
-                    <h2>Projects that show how I <span class="accent-dark">build and solve.</span></h2>
-                    <p>Selected academic work focused on web development, checkout workflows, e-commerce, and
-                        networking.</p>
+        <!-- Projects -->
+        <section id="projects" class="bg-soft py-24 sm:py-28">
+            <div class="mx-auto w-[min(1140px,calc(100%-40px))]">
+                <div class="reveal mb-12 max-w-3xl">
+                    <p class="mb-3 font-mono text-xs font-medium tracking-[0.2em] text-green-700 uppercase">Academic
+                        Projects</p>
+                    <h2 class="text-4xl font-extrabold tracking-[-.04em] sm:text-5xl">
+                        Projects that show how I <span class="text-green-700">build and solve.</span>
+                    </h2>
+                    <p class="mt-4 max-w-2xl text-slate-500">
+                        Selected academic work focused on web development, checkout workflows, e-commerce, and
+                        networking.
+                    </p>
                 </div>
 
-                <div class="projects-grid">
-                    <article class="project-card glass-card reveal">
-                        <div class="project-number">01</div>
+                <div class="grid gap-5 lg:grid-cols-2">
+                    <article class="project-card reveal">
+                        <div class="project-index">01</div>
                         <div class="project-icon"><i class="fa-solid fa-car-side"></i></div>
-                        <span class="project-type">Capstone 1 & 2</span>
+                        <span class="project-label">Capstone 1 & 2</span>
                         <h3>InstaCar — Car Rental POS & Booking System</h3>
                         <p>Developed a car rental POS and online booking system with reservations, Google login, and QR
                             payment processing.</p>
-                        <div class="tags"><span>Booking</span><span>POS</span><span>Google Login</span><span>QR
-                                Payment</span></div>
+                        <div class="mt-5 flex flex-wrap gap-2">
+                            <span class="tag">Booking</span><span class="tag">POS</span><span class="tag">Google
+                                Login</span><span class="tag">QR Payment</span>
+                        </div>
                     </article>
 
-                    <article class="project-card glass-card reveal">
-                        <div class="project-number">02</div>
+                    <article class="project-card reveal">
+                        <div class="project-index">02</div>
                         <div class="project-icon"><i class="fa-solid fa-bag-shopping"></i></div>
-                        <span class="project-type">Mini Capstone</span>
+                        <span class="project-label">Mini Capstone</span>
                         <h3>Nike E-Commerce</h3>
                         <p>Created a Nike-themed e-commerce website with product listings, shopping cart functionality,
                             and a user-friendly interface.</p>
-                        <div class="tags"><span>E-Commerce</span><span>Product
-                                UI</span><span>Cart</span><span>Responsive</span></div>
+                        <div class="mt-5 flex flex-wrap gap-2">
+                            <span class="tag">E-Commerce</span><span class="tag">Product UI</span><span
+                                class="tag">Cart</span><span class="tag">Responsive</span>
+                        </div>
                     </article>
 
-                    <article class="project-card glass-card reveal">
-                        <div class="project-number">03</div>
+                    <article class="project-card reveal">
+                        <div class="project-index">03</div>
                         <div class="project-icon"><i class="fa-solid fa-cart-shopping"></i></div>
-                        <span class="project-type">Mini Capstone</span>
+                        <span class="project-label">Mini Capstone</span>
                         <h3>Simple Checkout System</h3>
                         <p>Built a basic checkout system for processing selected products, quantities, and total
                             purchase amounts.</p>
-                        <div class="tags"><span>Checkout</span><span>Products</span><span>Totals</span><span>UI
-                                Logic</span></div>
+                        <div class="mt-5 flex flex-wrap gap-2">
+                            <span class="tag">Checkout</span><span class="tag">Products</span><span
+                                class="tag">Totals</span><span class="tag">UI Logic</span>
+                        </div>
                     </article>
 
-                    <article class="project-card glass-card reveal">
-                        <div class="project-number">04</div>
+                    <article class="project-card reveal">
+                        <div class="project-index">04</div>
                         <div class="project-icon"><i class="fa-solid fa-diagram-project"></i></div>
-                        <span class="project-type">Final Project</span>
+                        <span class="project-label">Final Project</span>
                         <h3>PHINMA UI Network</h3>
                         <p>Designed and configured a Cisco-based network for PHINMA UI using Cisco Packet Tracer,
-                            focusing on network topology, IP addressing, device configuration, and connectivity testing.
-                        </p>
-                        <div class="tags"><span>Cisco</span><span>Packet Tracer</span><span>IP
-                                Addressing</span><span>Networking</span></div>
+                            focusing on topology, IP addressing, device configuration, and connectivity testing.</p>
+                        <div class="mt-5 flex flex-wrap gap-2">
+                            <span class="tag">Cisco</span><span class="tag">Packet Tracer</span><span class="tag">IP
+                                Addressing</span><span class="tag">Networking</span>
+                        </div>
                     </article>
                 </div>
             </div>
         </section>
 
-        <section id="skills" class="section section-light">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <p class="eyebrow">SKILLS</p>
-                    <h2>Tools I use to <span class="accent-dark">bring ideas to life.</span></h2>
-                    <p>A focused stack for building responsive interfaces and functional web systems.</p>
+        <!-- Skills -->
+        <section id="skills" class="bg-paper py-24 sm:py-28">
+            <div class="mx-auto w-[min(1140px,calc(100%-40px))]">
+                <div class="reveal mb-12 max-w-3xl">
+                    <p class="mb-3 font-mono text-xs font-medium tracking-[0.2em] text-green-700 uppercase">Skills</p>
+                    <h2 class="text-4xl font-extrabold tracking-[-.04em] sm:text-5xl">
+                        Tools I use to <span class="text-green-700">bring ideas to life.</span>
+                    </h2>
                 </div>
-                <div class="skills-layout">
-                    <div class="skill-group glass-card reveal">
-                        <div class="skill-group-head">
+
+                <div class="grid gap-4 lg:grid-cols-[1.25fr_.85fr_.85fr]">
+                    <div class="skill-card reveal">
+                        <div class="skill-head">
                             <div class="skill-icon"><i class="fa-solid fa-code"></i></div>
-                            <div><span>01</span>
+                            <div>
+                                <span>01</span>
                                 <h3>Front-end</h3>
                             </div>
                         </div>
-                        <div class="skill-list">
-                            <span><i class="fa-brands fa-html5"></i>HTML</span><span><i
-                                    class="fa-brands fa-css3-alt"></i>CSS</span>
-                            <span><i class="fa-brands fa-js"></i>JavaScript</span><span><i
-                                    class="fa-brands fa-bootstrap"></i>Bootstrap</span>
-                            <span><i class="fa-solid fa-wind"></i>Tailwind CSS</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-chip"><i class="fa-brands fa-html5"></i> HTML</span>
+                            <span class="skill-chip"><i class="fa-brands fa-css3-alt"></i> CSS</span>
+                            <span class="skill-chip"><i class="fa-brands fa-js"></i> JavaScript</span>
+                            <span class="skill-chip"><i class="fa-brands fa-bootstrap"></i> Bootstrap</span>
+                            <span class="skill-chip"><i class="fa-solid fa-wind"></i> Tailwind CSS</span>
                         </div>
                     </div>
-                    <div class="skill-group glass-card reveal">
-                        <div class="skill-group-head">
+
+                    <div class="skill-card reveal">
+                        <div class="skill-head">
                             <div class="skill-icon"><i class="fa-solid fa-server"></i></div>
-                            <div><span>02</span>
-                                <h3>Back-end & Database</h3>
+                            <div>
+                                <span>02</span>
+                                <h3>Back-end</h3>
                             </div>
                         </div>
-                        <div class="skill-list"><span><i class="fa-brands fa-php"></i>PHP</span><span><i
-                                    class="fa-solid fa-database"></i>MySQL</span></div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-chip"><i class="fa-brands fa-php"></i> PHP</span>
+                            <span class="skill-chip"><i class="fa-solid fa-database"></i> MySQL</span>
+                        </div>
                     </div>
-                    <div class="skill-group glass-card reveal">
-                        <div class="skill-group-head">
+
+                    <div class="skill-card reveal">
+                        <div class="skill-head">
                             <div class="skill-icon"><i class="fa-solid fa-network-wired"></i></div>
-                            <div><span>03</span>
+                            <div>
+                                <span>03</span>
                                 <h3>Networking</h3>
                             </div>
                         </div>
-                        <div class="skill-list"><span><i class="fa-solid fa-sitemap"></i>Network Topology</span><span><i
-                                    class="fa-solid fa-route"></i>IP Addressing</span><span><i
-                                    class="fa-solid fa-router"></i>Cisco Packet Tracer</span></div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-chip"><i class="fa-solid fa-sitemap"></i> Topology</span>
+                            <span class="skill-chip"><i class="fa-solid fa-route"></i> IP Addressing</span>
+                            <span class="skill-chip"><i class="fa-solid fa-router"></i> Packet Tracer</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="contact" class="section section-dark contact-section">
-            <div class="container contact-grid">
-                <div class="contact-copy reveal">
-                    <p class="eyebrow">CONTACT</p>
-                    <h2>Have an internship, OJT, or project opportunity?</h2>
-                    <p>I'm open to opportunities where I can learn, contribute, and continue improving my web
-                        development skills.</p>
-                    <div class="contact-links">
-                        <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                        <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-                        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <!-- Contact -->
+        <section id="contact" class="bg-ink2 py-24 text-white sm:py-28">
+            <div class="mx-auto grid w-[min(1140px,calc(100%-40px))] items-center gap-14 lg:grid-cols-[1fr_.9fr]">
+                <div class="reveal">
+                    <p class="mb-3 font-mono text-xs font-medium tracking-[0.2em] text-green-300 uppercase">Contact</p>
+                    <h2 class="max-w-2xl text-4xl font-extrabold leading-tight tracking-[-.04em] sm:text-5xl">
+                        Have an internship, OJT, or project opportunity?
+                    </h2>
+                    <p class="mt-5 max-w-2xl leading-8 text-slate-400">
+                        I'm open to opportunities where I can learn, contribute, and continue improving my web
+                        development skills.
+                    </p>
+
+                    <div class="mt-7 flex gap-2">
+                        <a href="#" class="social-btn" aria-label="LinkedIn"><i
+                                class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="#" class="social-btn" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="social-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                     </div>
                 </div>
 
-                <form id="contactForm" class="contact-form glass-panel reveal" novalidate>
-                    <div class="form-row"><label for="name">Name</label><input id="name" name="name" type="text"
-                            placeholder="Your full name" autocomplete="name"></div>
-                    <div class="form-row"><label for="email">Email</label><input id="email" name="email" type="email"
-                            placeholder="you@example.com" autocomplete="email"></div>
-                    <div class="form-row"><label for="message">Message</label><textarea id="message" name="message"
-                            rows="5" placeholder="Tell me about the opportunity..."></textarea></div>
-                    <button type="submit" class="btn btn-primary btn-full"><i class="fa-regular fa-paper-plane"></i>Send
-                        Message</button>
-                    <div id="formMessage" class="form-message" role="status"></div>
+                <form id="contactForm"
+                    class="reveal rounded-3xl border border-white/10 bg-white/[0.06] p-6 shadow-glass backdrop-blur-2xl"
+                    novalidate>
+                    <div class="mb-4">
+                        <label for="name"
+                            class="mb-2 block font-mono text-[11px] tracking-wide text-slate-300">NAME</label>
+                        <input id="name" type="text" placeholder="Your full name" class="form-control">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email"
+                            class="mb-2 block font-mono text-[11px] tracking-wide text-slate-300">EMAIL</label>
+                        <input id="email" type="email" placeholder="you@example.com" class="form-control">
+                    </div>
+                    <div class="mb-4">
+                        <label for="message"
+                            class="mb-2 block font-mono text-[11px] tracking-wide text-slate-300">MESSAGE</label>
+                        <textarea id="message" rows="5" placeholder="Tell me about the opportunity..."
+                            class="form-control resize-y"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full rounded-xl bg-green-500 px-5 py-3 font-extrabold text-ink transition hover:-translate-y-0.5 hover:bg-green-400">
+                        <i class="fa-regular fa-paper-plane mr-2"></i>
+                        Send Message
+                    </button>
+
+                    <div id="formMessage" class="mt-3 min-h-6 text-center text-sm"></div>
                 </form>
             </div>
         </section>
     </main>
 
-    <footer>
-        <div class="container footer-inner">
-            <div class="brand"><span class="brand-mark">&lt;/&gt;</span><span>Grace</span></div>
-            <p>© 2026 Grace. Built with care and clean code.</p>
+    <footer class="border-t border-white/5 bg-[#050b07] text-slate-500">
+        <div
+            class="mx-auto flex min-h-[92px] w-[min(1140px,calc(100%-40px))] flex-col items-center justify-between gap-3 py-6 text-center sm:flex-row sm:text-left">
+            <div class="flex items-center gap-2 font-extrabold text-white">
+                <span class="font-mono text-green-300">&lt;/&gt;</span>
+                <span>Grace</span>
+            </div>
+            <p class="font-mono text-[10px] tracking-wide">© 2026 Grace. Built with Tailwind CSS.</p>
         </div>
     </footer>
 
-    <button id="backToTop" class="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
     <script src="js/script.js"></script>
 </body>
 
