@@ -1,148 +1,51 @@
+const $ = (s, c = document) => c.querySelector(s); const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
-// ============================================
-// LOADING SCREEN
-// ============================================
-window.addEventListener('load', function () {
-    const loader = document.getElementById('loader');
-    setTimeout(function () {
-        loader.classList.add('hidden');
-    }, 500);
-});
+window.addEventListener("load", () => setTimeout(() => $("#loader")?.classList.add("hidden"), 300));
 
-// ============================================
-// NAVBAR SCROLL EFFECT
-// ============================================
-window.addEventListener('scroll', function () {
-    const nav = document.getElementById('mainNav');
-    if (window.scrollY > 50) {
-        nav.classList.add('navbar-scrolled');
-    } else {
-        nav.classList.remove('navbar-scrolled');
-    }
-});
-
-// ============================================
-// MOBILE MENU TOGGLE
-// ============================================
-const menuToggle = document.getElementById('menuToggle');
-const mobileMenu = document.getElementById('mobileMenu');
-const menuIcon = document.getElementById('menuIcon');
-let isMenuOpen = false;
-
-menuToggle.addEventListener('click', function () {
-    isMenuOpen = !isMenuOpen;
-    if (isMenuOpen) {
-        mobileMenu.classList.remove('max-h-0', 'opacity-0', 'invisible');
-        mobileMenu.classList.add('max-h-[500px]', 'opacity-100', 'visible');
-        menuIcon.className = 'fas fa-times text-xl';
-    } else {
-        mobileMenu.classList.remove('max-h-[500px]', 'opacity-100', 'visible');
-        mobileMenu.classList.add('max-h-0', 'opacity-0', 'invisible');
-        menuIcon.className = 'fas fa-bars text-xl';
-    }
-});
-
-// Close mobile menu on link click
-document.querySelectorAll('#mobileMenu a').forEach(function (link) {
-    link.addEventListener('click', function () {
-        isMenuOpen = false;
-        mobileMenu.classList.remove('max-h-[500px]', 'opacity-100', 'visible');
-        mobileMenu.classList.add('max-h-0', 'opacity-0', 'invisible');
-        menuIcon.className = 'fas fa-bars text-xl';
-    });
-});
-
-// ============================================
-// SMOOTH SCROLL FOR NAV LINKS
-// ============================================
-document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// ============================================
-// BACK TO TOP BUTTON
-// ============================================
-const backToTop = document.getElementById('backToTop');
-
-window.addEventListener('scroll', function () {
-    if (window.scrollY > 300) {
-        backToTop.classList.remove('hidden');
-        backToTop.classList.add('visible');
-    } else {
-        backToTop.classList.add('hidden');
-        backToTop.classList.remove('visible');
-    }
-});
-
-backToTop.addEventListener('click', function () {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-});
-
-// ============================================
-// CONTACT FORM HANDLER
-// ============================================
-const contactForm = document.getElementById('contactForm');
-const formMessage = document.getElementById('formMessage');
-
-contactForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
-
-    if (name.length < 2) {
-        showMessage('❌ Please enter your full name.', 'error');
-        return;
-    }
-
-    if (!email.includes('@') || !email.includes('.')) {
-        showMessage('❌ Please enter a valid email address.', 'error');
-        return;
-    }
-
-    if (message.length < 10) {
-        showMessage('❌ Please enter a message with at least 10 characters.', 'error');
-        return;
-    }
-
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    submitBtn.disabled = true;
-
-    setTimeout(function () {
-        showMessage('✅ Thank you for your message! I\'ll get back to you soon.', 'success');
-        contactForm.reset();
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    }, 1500);
-});
-
-function showMessage(text, type) {
-    formMessage.textContent = text;
-    formMessage.className = 'mt-4 text-center p-4 rounded-xl ' +
-        (type === 'error' ?
-            'bg-red-500/10 text-red-400 border border-red-500/20' :
-            'bg-green-500/10 text-green-400 border border-green-500/20'
-        );
-    formMessage.classList.remove('hidden');
-
-    setTimeout(function () {
-        formMessage.classList.add('hidden');
-    }, 5000);
+const mainNav = $("#mainNav"), backToTop = $("#backToTop"), navLinks = $$(".nav-link"), sections = $$("main section[id]");
+function handleScroll() {
+    const y = window.scrollY;
+    mainNav?.classList.toggle("navbar-scrolled", y > 40);
+    backToTop?.classList.toggle("visible", y > 420);
+    let activeId = "home";
+    sections.forEach(section => { if (y >= section.offsetTop - 130) activeId = section.id });
+    navLinks.forEach(link => link.classList.toggle("active", link.getAttribute("href") === `#${activeId}`));
 }
+window.addEventListener("scroll", handleScroll, { passive: true }); handleScroll();
 
-console.log('🚀 Grace Portfolio loaded successfully!');
+const menuToggle = $("#menuToggle"), mobileMenu = $("#mobileMenu"), menuIcon = $("#menuIcon");
+function setMenu(open) {
+    mobileMenu?.classList.toggle("open", open);
+    mobileMenu?.setAttribute("aria-hidden", String(!open));
+    menuToggle?.setAttribute("aria-expanded", String(open));
+    document.body.classList.toggle("menu-open", open);
+    if (menuIcon) menuIcon.className = open ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+}
+menuToggle?.addEventListener("click", () => setMenu(!mobileMenu?.classList.contains("open")));
+$$('#mobileMenu a').forEach(link => link.addEventListener("click", () => setMenu(false)));
+
+$$('a[href^="#"]').forEach(anchor => anchor.addEventListener("click", e => {
+    const href = anchor.getAttribute("href"); if (!href || href === "#") return;
+    const target = $(href); if (!target) return; e.preventDefault(); target.scrollIntoView({ behavior: "smooth", block: "start" });
+}));
+
+const revealItems = $$(".reveal");
+if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries, obs) => entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add("visible"); obs.unobserve(entry.target) }
+    }), { threshold: .14 });
+    revealItems.forEach(item => observer.observe(item));
+} else revealItems.forEach(item => item.classList.add("visible"));
+
+backToTop?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+const contactForm = $("#contactForm"), formMessage = $("#formMessage");
+function showMessage(text, type) { if (!formMessage) return; formMessage.textContent = text; formMessage.className = `form-message ${type}` }
+contactForm?.addEventListener("submit", e => {
+    e.preventDefault();
+    const name = $("#name")?.value.trim() ?? "", email = $("#email")?.value.trim() ?? "", message = $("#message")?.value.trim() ?? "";
+    if (name.length < 2) return showMessage("Please enter your full name.", "error");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showMessage("Please enter a valid email address.", "error");
+    if (message.length < 10) return showMessage("Please write a message with at least 10 characters.", "error");
+    showMessage("Form looks good. Connect a mail service or backend to send messages.", "success");
+});
